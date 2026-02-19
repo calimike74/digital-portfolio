@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import {
   MessageCircle, Zap, Users, Lightbulb,
-  TrendingUp, DollarSign, Shield,
+  TrendingUp, DollarSign, Shield, Linkedin, Mail,
 } from 'lucide-react';
 import ScrollHero from '@/components/ScrollHero';
 import gsap from 'gsap';
@@ -365,9 +365,37 @@ export default function Home() {
             lineHeight: 1.7,
             color: '#888',
             fontStyle: 'italic',
+            marginBottom: 24,
           }}>
             Open to consulting, training, and collaboration with schools ready to integrate AI properly.
           </p>
+
+          <a
+            href="https://www.linkedin.com/in/michael-lehnert-9a784790/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Connect on LinkedIn"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '10px 20px',
+              background: 'rgba(217, 80, 0, 0.08)',
+              border: '1px solid rgba(217, 80, 0, 0.15)',
+              borderRadius: 'var(--radius-md)',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              color: '#d95000',
+              textDecoration: 'none',
+              transition: 'background 0.2s ease-out',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(217, 80, 0, 0.15)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(217, 80, 0, 0.08)'}
+          >
+            <Linkedin size={18} strokeWidth={1.5} />
+            Connect on LinkedIn
+          </a>
         </div>
       </section>
 
@@ -403,25 +431,25 @@ export default function Home() {
           href="https://www.linkedin.com/in/michael-lehnert-9a784790/"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="LinkedIn profile"
           style={{
-            display: 'inline-block',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             marginTop: 24,
-            padding: '12px 32px',
+            width: 48,
+            height: 48,
             background: 'rgba(255, 255, 255, 0.15)',
             border: '1px solid rgba(255, 255, 255, 0.3)',
-            borderRadius: 'var(--radius-md)',
-            fontFamily: 'var(--font-body)',
-            fontSize: '0.875rem',
-            fontWeight: 500,
+            borderRadius: '50%',
             color: '#ffffff',
             textDecoration: 'none',
-            letterSpacing: '0.04em',
             transition: 'background 0.2s ease-out',
           }}
           onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.25)'}
           onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'}
         >
-          Connect on LinkedIn
+          <Linkedin size={20} strokeWidth={1.5} />
         </a>
         <div style={{
           width: 40,
