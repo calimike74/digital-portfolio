@@ -182,15 +182,15 @@ export default function ScrollHero({ children }) {
           }}>Digital Lead Portfolio</p>
           <h1 style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(3rem, 10vw, 8rem)',
-            fontWeight: 900,
+            fontSize: 'clamp(3rem, 8vw, 6.4rem)',
+            fontWeight: 400,
             color: '#1a1a1a',
             lineHeight: 0.95,
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.025em',
             textTransform: 'uppercase',
             maxWidth: 900,
           }}>
-            AI-Powered Music Technology Education
+            AI-Powered<br />Music<br />Technology<br />Education
           </h1>
           <p style={{
             fontFamily: 'var(--font-body)',

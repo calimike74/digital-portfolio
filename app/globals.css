@@ -8,7 +8,7 @@
   --text-accent: #d95000;
   --border-subtle: #e0ddd8;
 
-  --font-display: var(--font-barlow-condensed), 'Barlow Condensed', sans-serif;
+  --font-display: var(--font-bodoni-moda), 'Bodoni Moda', serif;
   --font-body: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
 
   /* Shadows — lighter for light bg */

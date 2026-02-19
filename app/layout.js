@@ -1,11 +1,11 @@
-import { Barlow_Condensed, Space_Grotesk } from "next/font/google";
+import { Bodoni_Moda, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "@/components/LenisProvider";
 
-const barlowCondensed = Barlow_Condensed({
+const bodoniModa = Bodoni_Moda({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-barlow-condensed",
+  variable: "--font-bodoni-moda",
   display: "swap",
 });
 
@@ -43,7 +43,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${barlowCondensed.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={`${bodoniModa.variable} ${spaceGrotesk.variable}`}>
       <body>
         <LenisProvider>{children}</LenisProvider>
       </body>
