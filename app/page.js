@@ -261,6 +261,117 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════
+          ABOUT — Bio section for E-E-A-T
+          ═══════════════════════════════════════════ */}
+      <section style={{
+        background: '#f0eeeb',
+        padding: '100px 24px',
+      }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.6875rem',
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            letterSpacing: '0.2em',
+            color: '#d95000',
+            marginBottom: 16,
+          }}>About</p>
+
+          <h2 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(1.75rem, 5vw, 3rem)',
+            fontWeight: 900,
+            color: '#1a1a1a',
+            textTransform: 'uppercase',
+            lineHeight: 1.05,
+            letterSpacing: '-0.02em',
+            marginBottom: 32,
+          }}>Mike Lehnert</h2>
+
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '1.0625rem',
+            lineHeight: 1.8,
+            color: '#333',
+            marginBottom: 20,
+          }}>
+            Music technology teacher. AI tool builder. Helping educators figure out what actually works.
+          </p>
+
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '1.0625rem',
+            lineHeight: 1.8,
+            color: '#555',
+            marginBottom: 20,
+          }}>
+            After 20 years in the classroom — in schools, at Leeds Conservatoire, as a Pearson examiner — I started using generative AI seriously about three years ago. More recently, I&apos;ve been building tools with Claude Code, Obsidian, Gemini, and NotebookLM. My approach is to use multiple AI systems rather than locking into one — different tools for different jobs.
+          </p>
+
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '1.0625rem',
+            lineHeight: 1.8,
+            color: '#555',
+            marginBottom: 20,
+          }}>
+            I&apos;ve built an Obsidian vault system for organising teaching materials, developed grading and feedback tools, and created interactive resources for A-Level Music Technology. I&apos;ve documented this work on YouTube to help other educators explore what&apos;s possible.
+          </p>
+
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '1.0625rem',
+            lineHeight: 1.8,
+            color: '#555',
+            marginBottom: 20,
+          }}>
+            What I&apos;ve found is that AI works best when it walks alongside you as a teaching assistant — not doing the work for you, but helping with the repetitive stuff so you can focus on actual teaching.
+          </p>
+
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '1.0625rem',
+            lineHeight: 1.8,
+            color: '#555',
+            marginBottom: 32,
+          }}>
+            Schools need help figuring this out. Most AI advice is either too abstract or comes from people who haven&apos;t been in a classroom recently. I&apos;m still teaching daily, so I know what actually works and what doesn&apos;t.
+          </p>
+
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 12,
+            marginBottom: 24,
+          }}>
+            {['MIE Expert', 'Apple Certified Teacher', 'Pearson Examiner', '20 Years Teaching'].map((tag) => (
+              <span key={tag} style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.75rem',
+                fontWeight: 500,
+                color: '#d95000',
+                background: 'rgba(217, 80, 0, 0.08)',
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-md)',
+                letterSpacing: '0.02em',
+              }}>{tag}</span>
+            ))}
+          </div>
+
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.9375rem',
+            lineHeight: 1.7,
+            color: '#888',
+            fontStyle: 'italic',
+          }}>
+            Open to consulting, training, and collaboration with schools ready to integrate AI properly.
+          </p>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
           FOOTER — Bold lime editorial punch
           ═══════════════════════════════════════════ */}
       <footer style={{

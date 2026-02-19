@@ -76,12 +76,15 @@ const jsonLd = {
       alternateName: "Michael Lehnert",
       jobTitle: "Music Technology Teacher",
       description:
-        "A-Level Music Technology teacher and digital innovation lead building AI-powered educational tools.",
+        "A-Level Music Technology teacher with 20 years experience, Pearson examiner, MIE Expert and Apple Certified Teacher building AI-powered educational tools.",
       knowsAbout: [
         "Music Technology",
         "A-Level Education",
         "AI in Education",
         "Educational Technology",
+        "Pearson Edexcel",
+        "Claude Code",
+        "Generative AI",
       ],
       sameAs: ["https://www.linkedin.com/in/michael-lehnert-9a784790/"],
     },
