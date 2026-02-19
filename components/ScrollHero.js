@@ -45,7 +45,6 @@ const CHAPTERS = [
     before: 'Mark 30 papers by hand over a weekend',
     after: 'AI marks and gives feedback in seconds',
     videoSrc: '/ai-marking.mp4',
-    demoUrl: 'https://waveform-assessment.vercel.app',
   },
   {
     num: '02',
@@ -54,7 +53,6 @@ const CHAPTERS = [
     before: 'Recognise handwriting, adjust expectations',
     after: 'Mark the work, not the student',
     videoSrc: '/blind-marking.mp4',
-    demoUrl: 'https://grades-dashboard.vercel.app',
   },
   {
     num: '03',
@@ -63,7 +61,6 @@ const CHAPTERS = [
     before: 'Copy marks between 3 different systems',
     after: 'Enter once, available everywhere',
     videoSrc: '/live-data-sync.mp4',
-    demoUrl: 'https://grades-dashboard.vercel.app',
   },
   {
     num: '04',
@@ -72,7 +69,6 @@ const CHAPTERS = [
     before: 'Watch a video, hope they remember',
     after: 'Build it, hear it, understand it',
     videoSrc: '/interactive-tools.mp4',
-    demoUrl: 'https://interactive-resources.vercel.app',
   },
   {
     num: '05',
@@ -81,7 +77,6 @@ const CHAPTERS = [
     before: 'Revise everything and hope for the best',
     after: 'Focus on what you actually need to learn',
     videoSrc: '/revision-hub.mp4',
-    demoUrl: 'https://grades-dashboard.vercel.app',
   },
 ];
 
@@ -378,32 +373,23 @@ export default function ScrollHero({ children }) {
                     pointerEvents: 'none',
                   }} />
                   {/* Live Demo badge */}
-                  <a
-                    href={chapter.demoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      position: 'absolute',
-                      bottom: 12,
-                      left: 12,
-                      fontFamily: 'var(--font-body)',
-                      fontSize: '0.625rem',
-                      color: '#d95000',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.1em',
-                      background: 'rgba(255,255,255,0.85)',
-                      padding: '4px 10px',
-                      borderRadius: 'var(--radius-sm)',
-                      backdropFilter: 'blur(8px)',
-                      zIndex: 1,
-                      textDecoration: 'none',
-                      transition: 'background 0.2s ease-out',
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,1)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.85)'}
-                  >
-                    Live Demo &rarr;
-                  </a>
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 12,
+                    left: 12,
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.625rem',
+                    color: '#d95000',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    background: 'rgba(255,255,255,0.85)',
+                    padding: '4px 10px',
+                    borderRadius: 'var(--radius-sm)',
+                    backdropFilter: 'blur(8px)',
+                    zIndex: 1,
+                  }}>
+                    Live Demo
+                  </div>
                 </div>
               </div>
             </div>
