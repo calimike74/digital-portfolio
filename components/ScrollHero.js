@@ -7,7 +7,7 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-function ChapterVideo({ src, active }) {
+function ChapterVideo({ src, poster, active }) {
   const videoRef = useRef(null);
   useEffect(() => {
     const video = videoRef.current;
@@ -25,6 +25,7 @@ function ChapterVideo({ src, active }) {
       loop
       playsInline
       preload="metadata"
+      poster={poster}
       style={{
         width: '100%',
         height: '100%',
@@ -45,6 +46,7 @@ const CHAPTERS = [
     before: 'Mark 30 papers by hand over a weekend',
     after: 'AI marks and gives feedback in seconds',
     videoSrc: '/ai-marking.mp4',
+    posterSrc: '/ai-marking-poster.jpg',
   },
   {
     num: '02',
@@ -53,6 +55,7 @@ const CHAPTERS = [
     before: 'Recognise handwriting, adjust expectations',
     after: 'Mark the work, not the student',
     videoSrc: '/blind-marking.mp4',
+    posterSrc: '/blind-marking-poster.jpg',
   },
   {
     num: '03',
@@ -61,6 +64,7 @@ const CHAPTERS = [
     before: 'Copy marks between 3 different systems',
     after: 'Enter once, available everywhere',
     videoSrc: '/live-data-sync.mp4',
+    posterSrc: '/live-data-sync-poster.jpg',
   },
   {
     num: '04',
@@ -69,6 +73,7 @@ const CHAPTERS = [
     before: 'Watch a video, hope they remember',
     after: 'Build it, hear it, understand it',
     videoSrc: '/interactive-tools.mp4',
+    posterSrc: '/interactive-tools-poster.jpg',
   },
   {
     num: '05',
@@ -77,6 +82,7 @@ const CHAPTERS = [
     before: 'Revise everything and hope for the best',
     after: 'Focus on what you actually need to learn',
     videoSrc: '/revision-hub.mp4',
+    posterSrc: '/revision-hub-poster.jpg',
   },
 ];
 
@@ -206,7 +212,7 @@ export default function ScrollHero({ children }) {
             padding: '12px 32px',
             borderRadius: 'var(--radius-md)',
           }}>
-            How one teacher built a complete learning platform using AI tools — no engineering team, no funding, no code experience
+            How one A-Level Music Technology teacher built a complete learning platform using AI tools — no engineering team, no funding, no code experience
           </p>
           <div style={{
             position: 'absolute',
@@ -361,7 +367,7 @@ export default function ScrollHero({ children }) {
                   position: 'relative',
                   boxShadow: 'var(--shadow-lg)',
                 }}>
-                  <ChapterVideo src={chapter.videoSrc} active={opacity > 0.5} />
+                  <ChapterVideo src={chapter.videoSrc} poster={chapter.posterSrc} active={opacity > 0.5} />
                   {/* Bottom gradient to hide baked-in video text */}
                   <div style={{
                     position: 'absolute',
@@ -485,7 +491,7 @@ export default function ScrollHero({ children }) {
 
 function ChapterNavInline({ progress, activeChapter, visible }) {
   return (
-    <div style={{
+    <nav aria-label="Feature sections" style={{
       position: 'absolute',
       left: 24,
       top: '50%',
@@ -532,6 +538,6 @@ function ChapterNavInline({ progress, activeChapter, visible }) {
           )}
         </div>
       ))}
-    </div>
+    </nav>
   );
 }

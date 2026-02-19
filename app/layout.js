@@ -27,7 +27,7 @@ export const metadata = {
   openGraph: {
     title: "AI-Powered Music Technology Education",
     description:
-      "How one teacher used AI to build interactive learning tools, automated marking, and a real-time student dashboard — from scratch.",
+      "How one A-Level Music Technology teacher used AI to build interactive learning tools, automated marking, and a real-time student dashboard — from scratch.",
     type: "website",
     locale: "en_GB",
     url: "https://mike-lehnert-portfolio.vercel.app",
@@ -37,7 +37,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "AI-Powered Music Technology Education",
     description:
-      "How one teacher used AI to build interactive learning tools, automated marking, and a real-time student dashboard — from scratch.",
+      "How one A-Level Music Technology teacher used AI to build interactive learning tools, automated marking, and a real-time student dashboard — from scratch.",
     images: ["/og-image"],
   },
   authors: [{ name: "Mike Lehnert" }],
