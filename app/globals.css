@@ -107,6 +107,14 @@ html::after {
   background: #aaa;
 }
 
+/* Hide corner decorations on mobile */
+@media (max-width: 768px) {
+  body::before, body::after,
+  html::before, html::after {
+    display: none;
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

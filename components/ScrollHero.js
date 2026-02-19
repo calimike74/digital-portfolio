@@ -1,11 +1,23 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    setIsMobile(mq.matches);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 function ChapterVideo({ src, poster, active }) {
   const videoRef = useRef(null);
@@ -92,6 +104,7 @@ export default function ScrollHero({ children }) {
   const [progress, setProgress] = useState(0);
   const [activeChapter, setActiveChapter] = useState(-1);
   const [act, setAct] = useState(1);
+  const isMobile = useIsMobile();
 
   useGSAP(() => {
     const trigger = ScrollTrigger.create({
@@ -156,8 +169,10 @@ export default function ScrollHero({ children }) {
           zIndex: 1,
           transition: 'filter 0.8s ease-out, opacity 0.8s ease-out, transform 0.8s ease-out',
           filter: contentActive ? 'blur(1px)' : 'blur(0px)',
-          opacity: contentActive ? 0.5 : 1,
-          transform: contentActive ? 'translateX(12%) scale(1.02)' : 'translateX(0) scale(1)',
+          opacity: contentActive ? (isMobile ? 0.3 : 0.5) : 1,
+          transform: contentActive
+            ? (isMobile ? 'scale(1.05)' : 'translateX(12%) scale(1.02)')
+            : 'translateX(0) scale(1)',
         }}>
           {typeof children === 'function' ? children(progress) : children}
         </div>
@@ -272,22 +287,26 @@ export default function ScrollHero({ children }) {
               inset: 0,
               zIndex: 3,
               display: 'flex',
-              alignItems: 'center',
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'stretch' : 'center',
+              justifyContent: isMobile ? 'center' : 'flex-start',
               opacity,
               pointerEvents: opacity > 0 ? 'auto' : 'none',
               transition: 'opacity 0.15s ease-out',
+              padding: isMobile ? '60px 20px 20px' : 0,
+              gap: isMobile ? 16 : 0,
             }}>
-              {/* Left: text content */}
+              {/* Text content */}
               <div style={{
-                flex: '0 0 45%',
-                padding: '40px 40px 40px 80px',
-                maxWidth: 520,
+                flex: isMobile ? '0 0 auto' : '0 0 45%',
+                padding: isMobile ? 0 : '40px 40px 40px 80px',
+                maxWidth: isMobile ? '100%' : 520,
                 transform: `translateY(${opacity < 0.5 ? 20 : 0}px)`,
                 transition: 'transform 0.4s ease-out',
               }}>
                 <span style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                  fontSize: isMobile ? '2rem' : 'clamp(2.5rem, 5vw, 4rem)',
                   fontWeight: 900,
                   color: 'rgba(217, 80, 0, 0.12)',
                   lineHeight: 1,
@@ -296,29 +315,33 @@ export default function ScrollHero({ children }) {
                 }}>{chapter.num}</span>
                 <h2 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)',
+                  fontSize: isMobile ? '1.5rem' : 'clamp(1.5rem, 3.5vw, 2.5rem)',
                   fontWeight: 700,
                   color: '#1a1a1a',
                   textTransform: 'uppercase',
                   lineHeight: 1.1,
-                  marginBottom: 16,
+                  marginBottom: isMobile ? 10 : 16,
                 }}>{chapter.title}</h2>
                 <p style={{
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.9375rem',
+                  fontSize: isMobile ? '0.8125rem' : '0.9375rem',
                   color: '#555',
-                  lineHeight: 1.7,
-                  marginBottom: 20,
+                  lineHeight: 1.6,
+                  marginBottom: isMobile ? 12 : 20,
+                  display: isMobile ? '-webkit-box' : 'block',
+                  WebkitLineClamp: isMobile ? 4 : 'unset',
+                  WebkitBoxOrient: 'vertical',
+                  overflow: isMobile ? 'hidden' : 'visible',
                 }}>{chapter.desc}</p>
 
                 {/* Before / After */}
                 <div style={{
-                  padding: '16px 20px',
+                  padding: isMobile ? '12px 16px' : '16px 20px',
                   background: 'rgba(255,255,255,0.7)',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border-subtle)',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.8125rem',
+                  fontSize: isMobile ? '0.75rem' : '0.8125rem',
                   lineHeight: 1.6,
                   backdropFilter: 'blur(8px)',
                 }}>
@@ -349,23 +372,25 @@ export default function ScrollHero({ children }) {
                 </div>
               </div>
 
-              {/* Right: video demo */}
+              {/* Video demo */}
               <div style={{
-                flex: 1,
-                height: '70%',
-                padding: '0 60px 0 20px',
+                flex: isMobile ? '1 1 0' : 1,
+                minHeight: isMobile ? 0 : 'auto',
+                height: isMobile ? 'auto' : '70%',
+                padding: isMobile ? 0 : '0 60px 0 20px',
                 display: 'flex',
                 alignItems: 'center',
               }}>
                 <div style={{
                   width: '100%',
-                  height: '100%',
+                  height: isMobile ? '100%' : '100%',
                   borderRadius: 'var(--radius-xl)',
                   overflow: 'hidden',
                   border: '1px solid var(--border-subtle)',
                   background: 'rgba(255,255,255,0.5)',
                   position: 'relative',
                   boxShadow: 'var(--shadow-lg)',
+                  aspectRatio: isMobile ? '16/10' : 'auto',
                 }}>
                   <ChapterVideo src={chapter.videoSrc} poster={chapter.posterSrc} active={opacity > 0.5} />
                   {/* Bottom gradient to hide baked-in video text */}
@@ -374,7 +399,7 @@ export default function ScrollHero({ children }) {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    height: 120,
+                    height: isMobile ? 80 : 120,
                     background: 'linear-gradient(to bottom, transparent 0%, rgba(10,10,20,0.6) 40%, rgba(10,10,20,1) 75%)',
                     pointerEvents: 'none',
                   }} />
@@ -419,9 +444,9 @@ export default function ScrollHero({ children }) {
             background: 'rgba(240, 238, 235, 0.8)',
             backdropFilter: 'blur(16px)',
             borderRadius: 'var(--radius-xl)',
-            padding: '40px 48px',
+            padding: isMobile ? '28px 20px' : '40px 48px',
             maxWidth: 960,
-            width: '100%',
+            width: isMobile ? 'calc(100% - 40px)' : '100%',
           }}>
             <p style={{
               fontFamily: 'var(--font-body)',
@@ -430,13 +455,13 @@ export default function ScrollHero({ children }) {
               textTransform: 'uppercase',
               letterSpacing: '0.2em',
               color: '#d95000',
-              marginBottom: 32,
+              marginBottom: isMobile ? 20 : 32,
               textAlign: 'center',
             }}>The Numbers</p>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(5, 1fr)',
-              gap: 32,
+              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
+              gap: isMobile ? 20 : 32,
             }}>
               {[
                 { value: '4', label: 'Live Websites' },
@@ -471,8 +496,10 @@ export default function ScrollHero({ children }) {
           </div>
         </div>
 
-        {/* Chapter Nav — left sidebar */}
-        <ChapterNavInline progress={progress} activeChapter={activeChapter} visible={act === 2} />
+        {/* Chapter Nav — left sidebar (hidden on mobile) */}
+        {!isMobile && (
+          <ChapterNavInline progress={progress} activeChapter={activeChapter} visible={act === 2} />
+        )}
 
         {/* Scroll progress bar */}
         <div style={{

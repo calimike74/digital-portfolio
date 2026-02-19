@@ -74,7 +74,7 @@ export default function Home() {
       {/* The Approach */}
       <section style={{
         background: '#ffffff',
-        padding: '120px 24px',
+        padding: '80px 16px',
         position: 'relative',
       }}>
         {/* Top gradient transition from void to surface */}
@@ -161,7 +161,7 @@ export default function Home() {
       {/* The Bigger Picture */}
       <section style={{
         background: '#ffffff',
-        padding: '80px 24px 120px',
+        padding: '60px 16px 80px',
       }}>
         <div ref={bigPicRef} style={{ maxWidth: 720, margin: '0 auto' }}>
           <p style={{
@@ -265,7 +265,7 @@ export default function Home() {
           ═══════════════════════════════════════════ */}
       <section style={{
         background: '#f0eeeb',
-        padding: '100px 24px',
+        padding: '80px 16px',
       }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
           <p style={{
@@ -404,7 +404,7 @@ export default function Home() {
           ═══════════════════════════════════════════ */}
       <footer style={{
         background: '#d95000',
-        padding: '80px 24px',
+        padding: '60px 16px',
         textAlign: 'center',
         position: 'relative',
       }}>
