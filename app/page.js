@@ -237,14 +237,14 @@ export default function Home() {
                   <item.icon size={22} color="#d95000" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <h4 style={{
+                  <h3 style={{
                     fontFamily: 'var(--font-display)',
                     fontSize: '1.375rem',
                     fontWeight: 700,
                     color: '#1a1a1a',
                     textTransform: 'uppercase',
                     marginBottom: 8,
-                  }}>{item.title}</h4>
+                  }}>{item.title}</h3>
                   <p style={{
                     fontFamily: 'var(--font-body)',
                     fontSize: '1.0625rem',
