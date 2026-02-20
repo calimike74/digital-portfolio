@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
+
 import dynamic from 'next/dynamic';
 import {
   MessageCircle, Zap, Users, Lightbulb,
@@ -11,6 +12,205 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
+
+function ContactSection() {
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('sending');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setStatus('sent');
+        setForm({ name: '', email: '', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  const inputStyle = {
+    width: '100%',
+    padding: '14px 16px',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: 'var(--radius-md)',
+    fontFamily: 'var(--font-body)',
+    fontSize: '0.9375rem',
+    color: '#ffffff',
+    outline: 'none',
+    transition: 'border-color 0.2s ease-out',
+  };
+
+  return (
+    <section style={{
+      background: '#1a1a1a',
+      padding: '80px 16px',
+    }}>
+      <div style={{ maxWidth: 560, margin: '0 auto' }}>
+        <p style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.6875rem',
+          fontWeight: 500,
+          textTransform: 'uppercase',
+          letterSpacing: '0.2em',
+          color: '#d95000',
+          marginBottom: 16,
+          textAlign: 'center',
+        }}>Get in Touch</p>
+
+        <h2 style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 'clamp(1.75rem, 5vw, 3rem)',
+          fontWeight: 900,
+          color: '#ffffff',
+          textTransform: 'uppercase',
+          lineHeight: 1.05,
+          letterSpacing: '-0.02em',
+          marginBottom: 20,
+          textAlign: 'center',
+        }}>Interested in what AI<br />can do for your school?</h2>
+
+        <p style={{
+          fontFamily: 'var(--font-body)',
+          fontSize: '1.0625rem',
+          lineHeight: 1.7,
+          color: 'rgba(255, 255, 255, 0.6)',
+          marginBottom: 40,
+          textAlign: 'center',
+        }}>
+          Whether it&apos;s a half-day workshop, a department pilot, or just a conversation about where to start
+        </p>
+
+        {status === 'sent' ? (
+          <div style={{
+            textAlign: 'center',
+            padding: '40px 20px',
+            background: 'rgba(217, 80, 0, 0.1)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid rgba(217, 80, 0, 0.2)',
+          }}>
+            <p style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              color: '#ffffff',
+              marginBottom: 8,
+            }}>Message sent</p>
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.9375rem',
+              color: 'rgba(255, 255, 255, 0.6)',
+            }}>I&apos;ll get back to you soon</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', gap: 16 }}>
+              <input
+                type="text"
+                placeholder="Your name"
+                required
+                value={form.name}
+                onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
+                style={inputStyle}
+                onFocus={(e) => e.target.style.borderColor = 'rgba(217, 80, 0, 0.5)'}
+                onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)'}
+              />
+              <input
+                type="email"
+                placeholder="Your email"
+                required
+                value={form.email}
+                onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))}
+                style={inputStyle}
+                onFocus={(e) => e.target.style.borderColor = 'rgba(217, 80, 0, 0.5)'}
+                onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)'}
+              />
+            </div>
+            <textarea
+              placeholder="Tell me about your school and what you're looking for"
+              required
+              rows={4}
+              value={form.message}
+              onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))}
+              style={{ ...inputStyle, resize: 'vertical', minHeight: 120 }}
+              onFocus={(e) => e.target.style.borderColor = 'rgba(217, 80, 0, 0.5)'}
+              onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)'}
+            />
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  padding: '14px 32px',
+                  background: status === 'sending' ? '#a03800' : '#d95000',
+                  border: 'none',
+                  borderRadius: 'var(--radius-md)',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.9375rem',
+                  fontWeight: 600,
+                  color: '#ffffff',
+                  cursor: status === 'sending' ? 'wait' : 'pointer',
+                  letterSpacing: '0.02em',
+                  transition: 'background 0.2s ease-out, transform 0.2s ease-out',
+                }}
+                onMouseEnter={(e) => { if (status !== 'sending') { e.currentTarget.style.background = '#c44800'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = status === 'sending' ? '#a03800' : '#d95000'; e.currentTarget.style.transform = 'translateY(0)'; }}
+              >
+                <Mail size={18} strokeWidth={1.5} />
+                {status === 'sending' ? 'Sending...' : 'Send Message'}
+              </button>
+              <a
+                href="https://www.linkedin.com/in/michael-lehnert-9a784790/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  padding: '14px 24px',
+                  background: 'transparent',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: 'var(--radius-md)',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.9375rem',
+                  fontWeight: 500,
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  textDecoration: 'none',
+                  letterSpacing: '0.02em',
+                  transition: 'border-color 0.2s ease-out, color 0.2s ease-out',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)'; e.currentTarget.style.color = '#ffffff'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)'; }}
+              >
+                <Linkedin size={18} strokeWidth={1.5} />
+                LinkedIn
+              </a>
+            </div>
+            {status === 'error' && (
+              <p style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.8125rem',
+                color: '#ef4444',
+              }}>Something went wrong. Please try again or connect on LinkedIn</p>
+            )}
+          </form>
+        )}
+      </div>
+    </section>
+  );
+}
 
 const WaveformScene = dynamic(() => import('@/components/WaveformScene'), {
   ssr: false,
@@ -118,10 +318,10 @@ export default function Home() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {[
-              { icon: MessageCircle, bold: 'Built using Claude Code', rest: ' — an AI coding assistant you talk to in plain English' },
-              { icon: Zap, bold: 'Describe what you want', rest: ' — the AI writes the code, test it with students, refine' },
-              { icon: Users, bold: 'No engineering team, no funding', rest: ' — one teacher who knows their subject' },
-              { icon: Lightbulb, bold: 'Know your domain deeply', rest: ' — AI helps you build the tools your students need' },
+              { icon: MessageCircle, bold: 'Built using Claude Code', rest: ' — a conversational AI coding assistant. You describe what the tool should do in plain English, and it writes production-ready code' },
+              { icon: Zap, bold: 'Rapid iteration with real students', rest: ' — build a prototype in the morning, test it in the afternoon lesson, refine based on what actually happened in the room' },
+              { icon: Users, bold: 'No engineering team, no budget, no procurement', rest: ' — just one classroom teacher who understands the problems students face every day' },
+              { icon: Lightbulb, bold: 'Domain expertise is the superpower', rest: ' — AI handles the code, but knowing which pedagogical problems to solve and how students learn is what makes the tools effective' },
             ].map((item, i) => (
               <div key={i} style={{
                 display: 'flex',
@@ -259,6 +459,11 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════
+          CTA — Let's Talk (Resend contact form)
+          ═══════════════════════════════════════════ */}
+      <ContactSection />
 
       {/* ═══════════════════════════════════════════
           ABOUT — Bio section for E-E-A-T

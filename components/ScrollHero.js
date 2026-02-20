@@ -54,8 +54,8 @@ const CHAPTERS = [
   {
     num: '01',
     title: 'AI-Powered Marking',
-    desc: 'AI marks multiple-choice questions, calculations, and written responses against official mark schemes. Students get instant, structured feedback instead of waiting days. A full practice paper for 16 students was marked in a single afternoon — work that would normally take a full week by hand.',
-    before: 'Mark 30 papers by hand over a weekend',
+    desc: 'Teachers spend evenings and weekends marking papers that could be assessed in minutes. AI marks multiple-choice, calculations, and written responses against official mark schemes — giving students immediate directive feedback (Hattie) instead of a five-day wait that delays the corrective cycle identified by Wiliam & Black.',
+    before: 'A weekend lost to marking 30 papers',
     after: '16 students marked in one afternoon',
     videoSrc: '/ai-marking.mp4',
     posterSrc: '/ai-marking-poster.jpg',
@@ -63,7 +63,7 @@ const CHAPTERS = [
   {
     num: '02',
     title: 'Blind Marking',
-    desc: 'Anonymous student IDs hide identity during marking, removing unconscious bias. The system reveals who wrote what only after marks are finalised. Marking became faster and more consistent — and students noticed too, agreeing that their marks felt fairer across the board.',
+    desc: 'Bloom\u2019s Two Sigma research found teachers treat students unequally, with some receiving encouragement while others are largely ignored. Anonymous student IDs remove that bias entirely — marks are finalised before identities are revealed. Students noticed the difference, reporting that their marks felt fairer across the board.',
     before: 'Recognise handwriting, adjust expectations',
     after: 'Mark the work, not the student',
     videoSrc: '/blind-marking.mp4',
@@ -72,7 +72,7 @@ const CHAPTERS = [
   {
     num: '03',
     title: 'Live Data Sync',
-    desc: 'Grades entered in a spreadsheet automatically appear in the student portal. Marks submitted online sync back to the spreadsheet. Two-way, zero clicks. Open the CSV on your laptop, mark something on the website, change a grade in the dashboard — everything stays in sync automatically.',
+    desc: 'Most departments keep grades in three or more disconnected systems — spreadsheets, portals, mark books. Bloom identified that responsive teaching requires immediate access to performance data. This two-way sync means grades entered anywhere appear everywhere automatically, enabling the data-driven decisions that mastery learning depends on.',
     before: 'Copy marks between 3 different systems',
     after: 'Enter once, available everywhere',
     videoSrc: '/live-data-sync.mp4',
@@ -81,7 +81,7 @@ const CHAPTERS = [
   {
     num: '04',
     title: 'Interactive Tools',
-    desc: '14 interactive resources where students learn by doing — building synth patches, shaping EQ curves, hearing compression in real time. Not videos. Not PDFs. Real tools. When teaching low-pass and high-pass filters, students could hear a sine wave with frequencies being removed and brought back in real time, making an abstract concept immediately tangible.',
+    desc: 'Craik & Lockhart\u2019s Levels of Processing research shows that how material is processed matters more than the intention to learn. These 14 interactive tools force deep semantic processing — students build synth patches, shape EQ curves, and hear compression in real time, combining Paivio\u2019s dual coding (visual + auditory) with hands-on application.',
     before: 'Watch a video, hope they remember',
     after: 'Hear it, shape it, understand it',
     videoSrc: '/interactive-tools.mp4',
@@ -90,7 +90,7 @@ const CHAPTERS = [
   {
     num: '05',
     title: 'Revision Hub',
-    desc: 'AI-marked quizzes across 6 topics with progress tracking. Students see exactly what they know and what they need to work on, with targeted feedback on every answer. Students check in to see how they\u2019re performing and where to focus their revision — no more guessing.',
+    desc: 'Dunlosky et al. rated practice testing and distributed practice as the two highest-utility learning techniques. AI-marked quizzes across 6 topics implement both — retrieval practice with spaced intervals, showing students exactly where their gaps are. As Rosenshine prescribed: begin each session with review of what came before.',
     before: 'Revise everything and hope for the best',
     after: 'Focus on what you actually need to learn',
     videoSrc: '/revision-hub.mp4',
@@ -106,6 +106,37 @@ export default function ScrollHero({ children }) {
   const [act, setAct] = useState(1);
   const isMobile = useIsMobile();
 
+  // ── Intro animation — masked line reveal ──
+  useEffect(() => {
+    const introTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+    introTl.to('.hero-label', {
+      opacity: 1,
+      duration: 0.6,
+      delay: 0.5,
+    });
+
+    introTl.to('.hero-line', {
+      y: '0%',
+      duration: 1.2,
+      stagger: 0.15,
+      ease: 'power4.out',
+    }, '-=0.3');
+
+    introTl.to('.hero-subtitle', {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+    }, '-=0.5');
+
+    introTl.to('.hero-scroll-hint', {
+      opacity: 1,
+      duration: 0.6,
+    }, '-=0.3');
+
+    return () => introTl.kill();
+  }, []);
+
   useGSAP(() => {
     const trigger = ScrollTrigger.create({
       trigger: containerRef.current,
@@ -117,12 +148,12 @@ export default function ScrollHero({ children }) {
         const p = self.progress;
         setProgress(p);
 
-        if (p < 0.15) {
+        if (p < 0.07) {
           setAct(1);
           setActiveChapter(-1);
         } else if (p < 0.80) {
           setAct(2);
-          const chapterProgress = (p - 0.15) / 0.65;
+          const chapterProgress = (p - 0.07) / 0.73;
           const chapter = Math.min(4, Math.floor(chapterProgress * 5));
           setActiveChapter(chapter);
         } else {
@@ -139,8 +170,8 @@ export default function ScrollHero({ children }) {
 
   const getChapterOpacity = (index) => {
     if (act !== 2) return 0;
-    const chapterStart = 0.15 + (index / 5) * 0.65;
-    const chapterEnd = 0.15 + ((index + 1) / 5) * 0.65;
+    const chapterStart = 0.07 + (index / 5) * 0.73;
+    const chapterEnd = 0.07 + ((index + 1) / 5) * 0.73;
     const fadeIn = 0.025;
     const fadeOut = 0.025;
 
@@ -168,8 +199,8 @@ export default function ScrollHero({ children }) {
           inset: 0,
           zIndex: 1,
           transition: 'filter 0.8s ease-out, opacity 0.8s ease-out, transform 0.8s ease-out',
-          filter: contentActive ? 'blur(1px)' : 'blur(0px)',
-          opacity: contentActive ? (isMobile ? 0.3 : 0.5) : 1,
+          filter: contentActive ? 'blur(6px)' : 'blur(2px)',
+          opacity: contentActive ? (isMobile ? 0.2 : 0.35) : 0.7,
           transform: contentActive
             ? (isMobile ? 'scale(1.05)' : 'translateX(12%) scale(1.02)')
             : 'translateX(0) scale(1)',
@@ -177,22 +208,20 @@ export default function ScrollHero({ children }) {
           {typeof children === 'function' ? children(progress) : children}
         </div>
 
-        {/* Act 1: The Hook */}
+        {/* Act 1: The Hook — masked line reveal */}
         <div style={{
           position: 'absolute',
           inset: 0,
           zIndex: 2,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
           justifyContent: 'center',
-          textAlign: 'center',
-          padding: '0 24px',
+          padding: isMobile ? '0 20px' : '0 60px',
           opacity: act === 1 ? 1 : 0,
           pointerEvents: act === 1 ? 'auto' : 'none',
           transition: 'opacity 0.6s ease-out',
         }}>
-          <p style={{
+          <p className="hero-label" style={{
             fontFamily: 'var(--font-body)',
             fontSize: '0.75rem',
             fontWeight: 500,
@@ -200,43 +229,45 @@ export default function ScrollHero({ children }) {
             letterSpacing: '0.2em',
             color: '#d95000',
             marginBottom: 24,
-          }}>Digital Lead Portfolio</p>
+            opacity: 0,
+          }}>AI in Education</p>
           <h1 style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(3rem, 8vw, 6.4rem)',
-            fontWeight: 400,
+            fontSize: isMobile ? 'clamp(2.5rem, 10vw, 3.5rem)' : 'clamp(3rem, 7vw, 5.5rem)',
+            fontWeight: 700,
             color: '#1a1a1a',
-            lineHeight: 0.95,
+            lineHeight: 1.05,
             letterSpacing: '-0.025em',
-            textTransform: 'uppercase',
+            marginBottom: 32,
             maxWidth: 900,
           }}>
-            {['AI-Powered', 'Music', 'Technology', 'Education'].map((word, i) => (
-              <span key={i} style={{ display: 'block' }}>{word}</span>
+            {['AI-Powered Music', 'Technology', 'Education'].map((line, i) => (
+              <span key={i} style={{ display: 'block', overflow: 'clip', position: 'relative', paddingBottom: '0.1em' }}>
+                <span className="hero-line" style={{ display: 'block', transform: 'translateY(110%)' }}>{line}</span>
+              </span>
             ))}
           </h1>
-          <p style={{
+          <p className="hero-subtitle" style={{
             fontFamily: 'var(--font-body)',
-            fontSize: 'clamp(0.9rem, 2vw, 1.125rem)',
+            fontSize: 'clamp(0.9rem, 2vw, 1.0625rem)',
             color: '#555',
-            maxWidth: 900,
-            marginTop: 24,
+            maxWidth: 560,
             lineHeight: 1.7,
-            background: 'rgba(240, 238, 235, 0.75)',
-            backdropFilter: 'blur(12px)',
-            padding: '12px 32px',
-            borderRadius: 'var(--radius-md)',
+            opacity: 0,
+            transform: 'translateY(20px)',
           }}>
-            How one A-Level Music Technology teacher built a complete learning platform using AI tools — no engineering team, no funding, no code experience
+            How one A-Level teacher built a complete learning platform
+            using AI tools — no engineering team, no funding, no code experience
           </p>
-          <div style={{
+          <div className="hero-scroll-hint" style={{
             position: 'absolute',
             bottom: 40,
             fontFamily: 'var(--font-body)',
-            fontSize: '0.6875rem',
-            color: '#bbb',
+            fontSize: '0.625rem',
+            color: 'rgba(0, 0, 0, 0.35)',
             textTransform: 'uppercase',
             letterSpacing: '0.15em',
+            opacity: 0,
           }}>
             Scroll to explore
           </div>
@@ -245,7 +276,7 @@ export default function ScrollHero({ children }) {
         {/* Corner label — title shrinks into top-left during Act 1→2 transition */}
         {(() => {
           // Transition zone: progress 0.10 → 0.18
-          const t = Math.max(0, Math.min(1, (progress - 0.10) / 0.08));
+          const t = Math.max(0, Math.min(1, (progress - 0.03) / 0.06));
           const cornerOpacity = act >= 2 ? 1 : t;
           const cornerScale = 1 - t * 0.5; // font shrinks as it moves
           // Interpolate position: center → top-left
@@ -272,7 +303,7 @@ export default function ScrollHero({ children }) {
                 lineHeight: 1.1,
                 whiteSpace: 'nowrap',
               }}>
-                AI-Powered Education
+                AI in Education
               </p>
             </div>
           );
@@ -308,7 +339,7 @@ export default function ScrollHero({ children }) {
                   fontFamily: 'var(--font-display)',
                   fontSize: isMobile ? '2rem' : 'clamp(2.5rem, 5vw, 4rem)',
                   fontWeight: 900,
-                  color: 'rgba(217, 80, 0, 0.12)',
+                  color: '#d95000',
                   lineHeight: 1,
                   display: 'block',
                   marginBottom: -6,
@@ -464,11 +495,11 @@ export default function ScrollHero({ children }) {
               gap: isMobile ? 20 : 32,
             }}>
               {[
-                { value: '4', label: 'Live Websites' },
+                { value: '80%', label: 'Less Marking Time' },
+                { value: '5→0', label: 'Day Feedback Wait' },
                 { value: '14', label: 'Interactive Tools' },
-                { value: '3', label: 'AI Systems' },
-                { value: '6', label: 'Revision Topics' },
-                { value: '~6wk', label: 'Build Time' },
+                { value: '0', label: 'Bias in Marking' },
+                { value: '1', label: 'Teacher. No Dev Team' },
               ].map((stat, i) => (
                 <div key={i} style={{
                   textAlign: 'center',
@@ -557,7 +588,7 @@ function ChapterNavInline({ progress, activeChapter, visible }) {
                 top: 0,
                 left: 0,
                 width: '100%',
-                height: `${i < activeChapter ? 100 : i === activeChapter ? Math.min(100, Math.max(0, ((progress - 0.15 - i * 0.13) / 0.13) * 100)) : 0}%`,
+                height: `${i < activeChapter ? 100 : i === activeChapter ? Math.min(100, Math.max(0, ((progress - 0.07 - i * 0.146) / 0.146) * 100)) : 0}%`,
                 background: '#d95000',
                 transition: 'height 0.15s linear',
               }} />

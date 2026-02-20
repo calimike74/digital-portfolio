@@ -9,7 +9,6 @@ function Waveform({ progress = 0 }) {
   const meshRefBot = useRef();
   const materialRef = useRef();
 
-  // Two geometries: top surface + bottom surface offset by thickness for shell effect
   const { geoTop, geoBot, origTop, origBot } = useMemo(() => {
     const segX = 200;
     const segZ = 100;
@@ -40,10 +39,12 @@ function Waveform({ progress = 0 }) {
         varying vec3 vViewDir;
         varying vec2 vUv;
         varying float vElevation;
+        varying vec3 vWorldPos;
         void main() {
           vUv = uv;
           vElevation = position.y;
           vec4 worldPos = modelMatrix * vec4(position, 1.0);
+          vWorldPos = worldPos.xyz;
           vNormal = normalize(normalMatrix * normal);
           vViewDir = normalize(cameraPosition - worldPos.xyz);
           gl_Position = projectionMatrix * viewMatrix * worldPos;
@@ -61,6 +62,7 @@ function Waveform({ progress = 0 }) {
         varying vec3 vViewDir;
         varying vec2 vUv;
         varying float vElevation;
+        varying vec3 vWorldPos;
 
         vec3 palette(float t) {
           t = fract(t);
@@ -75,8 +77,10 @@ function Waveform({ progress = 0 }) {
           vec3 n = normalize(vNormal);
           vec3 v = normalize(vViewDir);
 
-          float fresnel = pow(1.0 - max(dot(n, v), 0.0), 2.5);
+          // ── Fresnel — stronger for glossy edge glow ──
+          float fresnel = pow(1.0 - max(dot(n, v), 0.0), 3.0);
 
+          // ── Base colour from palette ──
           float ci = dot(n, vec3(0.3, 0.5, 0.2)) * 0.6
                     + vUv.x * 0.4
                     + abs(vElevation) * 0.3;
@@ -85,18 +89,49 @@ function Waveform({ progress = 0 }) {
           vec3 edgeColor = palette(ci + 0.25 + fresnel * 0.3);
           vec3 color = mix(baseColor, edgeColor, fresnel);
 
-          // Specular highlights
+          // ── Clearcoat-style white fresnel reflection ──
+          // This adds the glossy white sheen at glancing angles
+          float clearcoatFresnel = pow(1.0 - max(dot(n, v), 0.0), 4.0);
+          color = mix(color, vec3(1.0), clearcoatFresnel * 0.45);
+
+          // ── Key specular highlight — sharp white reflection ──
           vec3 l1 = normalize(vec3(0.5, 0.8, 0.5));
           vec3 h1 = normalize(l1 + v);
-          color += vec3(pow(max(dot(n, h1), 0.0), 16.0) * 1.17);
+          float spec1 = pow(max(dot(n, h1), 0.0), 64.0);
+          color += vec3(1.0) * spec1 * 1.8;
 
+          // ── Secondary specular — softer fill ──
           vec3 l2 = normalize(vec3(-0.3, 0.2, -0.4));
           vec3 h2 = normalize(l2 + v);
-          color += vec3(pow(max(dot(n, h2), 0.0), 8.0) * 1.17 * 0.3);
+          float spec2 = pow(max(dot(n, h2), 0.0), 32.0);
+          color += vec3(1.0) * spec2 * 0.6;
 
-          color *= 0.7 + 0.3 * smoothstep(0.0, 1.0, abs(vElevation));
+          // ── Rim light — warm highlight from behind ──
+          vec3 l3 = normalize(vec3(-0.4, -0.3, -0.8));
+          float rim = pow(max(dot(n, l3), 0.0), 16.0);
+          color += vec3(1.0, 0.95, 0.9) * rim * 0.4;
 
-          gl_FragColor = vec4(color, 0.57);
+          // ── Environment-style reflection (fake) ──
+          // Reflect view direction off the normal, use as colour lookup
+          vec3 reflDir = reflect(-v, n);
+          float envLookup = reflDir.y * 0.5 + 0.5;
+          vec3 envColor = mix(
+            vec3(0.15, 0.12, 0.2),  // dark ground
+            vec3(0.9, 0.92, 0.95),  // bright sky
+            smoothstep(0.2, 0.8, envLookup)
+          );
+          // Blend env reflection based on metalness/glossiness
+          color = mix(color, envColor * palette(ci + 0.1), 0.12);
+
+          // ── Depth shading ──
+          color *= 0.75 + 0.25 * smoothstep(0.0, 1.0, abs(vElevation));
+
+          // ── Boost overall contrast and saturation ──
+          float luminance = dot(color, vec3(0.299, 0.587, 0.114));
+          color = mix(vec3(luminance), color, 1.2); // saturation boost
+          color = color * 1.05; // slight brightness lift
+
+          gl_FragColor = vec4(color, 0.32);
         }
       `,
       transparent: true,
@@ -105,7 +140,6 @@ function Waveform({ progress = 0 }) {
     });
   }, []);
 
-  // Clone material for bottom surface (flipped normals need same look)
   const botMaterial = useMemo(() => shaderMaterial.clone(), [shaderMaterial]);
 
   useFrame((state) => {
@@ -116,11 +150,10 @@ function Waveform({ progress = 0 }) {
 
     const harmonics = Math.floor(4 + progress * 4);
     const amplitude = 1.4 + progress * 0.7;
-    const speed = 0.65 + progress * 0.08;
+    const speed = 0.3 + progress * 0.04;
     const bendFactor = 0 + progress * 1.31;
     const thickness = 1.4;
 
-    // Displace top surface
     for (let i = 0; i < topPositions.length; i += 3) {
       const ox = origTop[i];
       const oz = origTop[i + 2];
@@ -145,12 +178,10 @@ function Waveform({ progress = 0 }) {
     geoTop.attributes.position.needsUpdate = true;
     geoTop.computeVertexNormals();
 
-    // Displace bottom surface — same wave, then offset along normals
     for (let i = 0; i < botPositions.length; i += 3) {
       botPositions[i + 1] = topPositions[i + 1];
     }
 
-    // Offset bottom surface along top normals for thickness
     const topNormals = geoTop.attributes.normal.array;
     for (let i = 0; i < botPositions.length; i += 3) {
       botPositions[i]     = topPositions[i]     - topNormals[i]     * thickness;
@@ -160,12 +191,10 @@ function Waveform({ progress = 0 }) {
 
     geoBot.attributes.position.needsUpdate = true;
     geoBot.computeVertexNormals();
-    // Flip normals on bottom surface
     const botNormals = geoBot.attributes.normal.array;
     for (let i = 0; i < botNormals.length; i++) botNormals[i] *= -1;
     geoBot.attributes.normal.needsUpdate = true;
 
-    // Update uniforms
     if (materialRef.current) {
       materialRef.current.uniforms.uProgress.value = progress;
       materialRef.current.uniforms.uTime.value = time;
@@ -173,8 +202,7 @@ function Waveform({ progress = 0 }) {
     botMaterial.uniforms.uProgress.value = progress;
     botMaterial.uniforms.uTime.value = time;
 
-    // Rotate the parent group
-    meshRefTop.current.parent.rotation.z = 0.39 + state.clock.elapsedTime * 0.015 + progress * 0.12;
+    meshRefTop.current.parent.rotation.z = 0.39 + state.clock.elapsedTime * 0.006 + progress * 0.12;
   });
 
   return (
