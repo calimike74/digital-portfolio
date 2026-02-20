@@ -463,7 +463,9 @@ export default function Home() {
       {/* ═══════════════════════════════════════════
           CTA — Let's Talk (Resend contact form)
           ═══════════════════════════════════════════ */}
-      <ContactSection />
+      <div id="contact">
+        <ContactSection />
+      </div>
 
       {/* ═══════════════════════════════════════════
           ABOUT — Bio section for E-E-A-T
@@ -550,8 +552,13 @@ export default function Home() {
             gap: 12,
             marginBottom: 24,
           }}>
-            {['MIE Expert', 'Apple Certified Teacher', 'Pearson Examiner', '20 Years Teaching'].map((tag) => (
-              <span key={tag} style={{
+            {[
+              { label: 'MIE Expert', href: 'https://education.microsoft.com/en-us' },
+              { label: 'Apple Certified Teacher', href: 'https://education.apple.com' },
+              { label: 'Pearson Examiner', href: 'https://qualifications.pearson.com/en/about-us/qualification-brands/edexcel.html' },
+              { label: '20 Years Teaching', href: null },
+            ].map((tag) => {
+              const style = {
                 fontFamily: 'var(--font-body)',
                 fontSize: '0.75rem',
                 fontWeight: 500,
@@ -560,8 +567,16 @@ export default function Home() {
                 padding: '6px 14px',
                 borderRadius: 'var(--radius-md)',
                 letterSpacing: '0.02em',
-              }}>{tag}</span>
-            ))}
+                textDecoration: 'none',
+              };
+              return tag.href ? (
+                <a key={tag.label} href={tag.href} target="_blank" rel="noopener noreferrer" style={style}>
+                  {tag.label}
+                </a>
+              ) : (
+                <span key={tag.label} style={style}>{tag.label}</span>
+              );
+            })}
           </div>
 
           <p style={{
@@ -681,6 +696,30 @@ export default function Home() {
             }}
           >
             Built with Claude Code
+          </a>
+          {' '}&middot;{' '}
+          <a
+            href="/services"
+            style={{
+              color: 'rgba(255, 255, 255, 0.7)',
+              textDecoration: 'underline',
+              textDecorationColor: 'rgba(255, 255, 255, 0.3)',
+              textUnderlineOffset: 4,
+            }}
+          >
+            Services
+          </a>
+          {' '}&middot;{' '}
+          <a
+            href="/privacy"
+            style={{
+              color: 'rgba(255, 255, 255, 0.7)',
+              textDecoration: 'underline',
+              textDecorationColor: 'rgba(255, 255, 255, 0.3)',
+              textUnderlineOffset: 4,
+            }}
+          >
+            Privacy
           </a>
           {' '}&middot; {new Date().getFullYear()}
         </p>

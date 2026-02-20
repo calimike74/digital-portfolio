@@ -19,7 +19,7 @@ function useIsMobile(breakpoint = 768) {
   return isMobile;
 }
 
-function ChapterVideo({ src, poster, active }) {
+function ChapterVideo({ src, poster, active, title }) {
   const videoRef = useRef(null);
   useEffect(() => {
     const video = videoRef.current;
@@ -38,6 +38,8 @@ function ChapterVideo({ src, poster, active }) {
       playsInline
       preload="metadata"
       poster={poster}
+      aria-label={`Demo video showing ${title || 'tool demonstration'}`}
+      title={title || 'Tool demonstration'}
       style={{
         width: '100%',
         height: '100%',
@@ -256,9 +258,31 @@ export default function ScrollHero({ children }) {
             opacity: 0,
             transform: 'translateY(20px)',
           }}>
-            How one A-Level teacher built a complete learning platform
-            using AI tools — no engineering team, no funding, no code experience
+            Edtech consulting for UK secondary schools — AI marking, interactive tools, and data systems built by a classroom teacher
           </p>
+          <a
+            href="#contact"
+            className="hero-scroll-hint"
+            style={{
+              display: 'inline-block',
+              marginTop: 28,
+              padding: '14px 32px',
+              background: '#d95000',
+              borderRadius: 'var(--radius-md)',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.9375rem',
+              fontWeight: 600,
+              color: '#ffffff',
+              textDecoration: 'none',
+              letterSpacing: '0.02em',
+              opacity: 0,
+              transition: 'background 0.2s ease-out, transform 0.2s ease-out',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = '#c44800'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = '#d95000'; e.currentTarget.style.transform = 'translateY(0)'; }}
+          >
+            Get in Touch
+          </a>
           <div className="hero-scroll-hint" style={{
             position: 'absolute',
             bottom: 40,
@@ -423,7 +447,7 @@ export default function ScrollHero({ children }) {
                   boxShadow: 'var(--shadow-lg)',
                   aspectRatio: isMobile ? '16/10' : 'auto',
                 }}>
-                  <ChapterVideo src={chapter.videoSrc} poster={chapter.posterSrc} active={opacity > 0.5} />
+                  <ChapterVideo src={chapter.videoSrc} poster={chapter.posterSrc} active={opacity > 0.5} title={chapter.title} />
                   {/* Bottom gradient to hide baked-in video text */}
                   <div style={{
                     position: 'absolute',
